@@ -1,0 +1,86 @@
+{
+  "name": "@mogilventures/sms-sdk",
+  "version": "0.1.0",
+  "description": "Compliance-aware A2P transactional SMS SDK with one-number-one-provider sender routing, normalized errors, retries, safe fallbacks, and pluggable provider adapters (Twilio, Telnyx, Plivo, AWS SNS).",
+  "license": "MIT",
+  "author": "Mogil Ventures",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mogilventures/sms-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mogilventures/sms-sdk/issues"
+  },
+  "homepage": "https://github.com/mogilventures/sms-sdk#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "sms-sdk": "./dist/cli.js"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./twilio": {
+      "types": "./dist/adapters/twilio.d.ts",
+      "import": "./dist/adapters/twilio.js",
+      "require": "./dist/adapters/twilio.cjs"
+    },
+    "./telnyx": {
+      "types": "./dist/adapters/telnyx.d.ts",
+      "import": "./dist/adapters/telnyx.js",
+      "require": "./dist/adapters/telnyx.cjs"
+    },
+    "./plivo": {
+      "types": "./dist/adapters/plivo.d.ts",
+      "import": "./dist/adapters/plivo.js",
+      "require": "./dist/adapters/plivo.cjs"
+    },
+    "./sns": {
+      "types": "./dist/adapters/sns.d.ts",
+      "import": "./dist/adapters/sns.js",
+      "require": "./dist/adapters/sns.cjs"
+    },
+    "./testing": {
+      "types": "./dist/adapters/memory.d.ts",
+      "import": "./dist/adapters/memory.js",
+      "require": "./dist/adapters/memory.cjs"
+    }
+  },
+  "scripts": {
+    "build": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\" && tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "sms",
+    "a2p",
+    "twilio",
+    "telnyx",
+    "plivo",
+    "sns",
+    "transactional",
+    "messaging",
+    "compliance"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}
