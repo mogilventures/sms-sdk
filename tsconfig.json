@@ -14,7 +14,17 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".",
+    "paths": {
+      "@mogilventures/sms-sdk": ["./src/index"],
+      "@mogilventures/sms-sdk/twilio": ["./src/adapters/twilio"],
+      "@mogilventures/sms-sdk/telnyx": ["./src/adapters/telnyx"],
+      "@mogilventures/sms-sdk/plivo": ["./src/adapters/plivo"],
+      "@mogilventures/sms-sdk/sns": ["./src/adapters/sns"],
+      "@mogilventures/sms-sdk/testing": ["./src/adapters/memory"],
+      "@mogilventures/sms-sdk/a2pcheck": ["./src/plugins/a2pcheck"]
+    }
   },
-  "include": ["src", "test"]
+  "include": ["src", "test", "examples"]
 }

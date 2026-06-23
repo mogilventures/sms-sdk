@@ -164,6 +164,62 @@ sms-sdk inbound-parse --provider twilio --json '{"From":"+15551239999","To":"+15
 
 `doctor` only checks local runtime and credential environment variables; it does not send a network request.
 
+## Examples
+
+Runnable examples live in [`examples/`](examples). The dry-run and fallback
+examples need no credentials; the provider examples read placeholder env vars.
+
+```bash
+npx tsx examples/memory-dry-run.ts
+```
+
+| Example | What it shows |
+| --- | --- |
+| [memory-dry-run.ts](examples/memory-dry-run.ts) | Send with the in-memory adapter — no network, no credentials. |
+| [safe-fallback.ts](examples/safe-fallback.ts) | Opt-in fallback to a different owned number when the primary fails. |
+| [inbound-twilio-express.ts](examples/inbound-twilio-express.ts) | Inbound webhook handler shape (express wiring shown in comments). |
+| [twilio-send.ts](examples/twilio-send.ts) | Real Twilio send using `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN`. |
+| [telnyx-send.ts](examples/telnyx-send.ts) | Real Telnyx send using `TELNYX_API_KEY`. |
+
+## A2PCheck readiness
+
+`@mogilventures/sms-sdk/a2pcheck` runs **local, offline** pre-send checks for
+common A2P/10DLC deliverability problems. It is readiness guidance, not legal
+advice and not a carrier verdict — it makes no network calls. Findings carry a
+severity of `info`, `warn`, or `block`.
+
+```ts
+import { a2pcheckReadiness } from "@mogilventures/sms-sdk/a2pcheck";
+
+const a2p = a2pcheckReadiness({ requireOptOutLanguage: true });
+
+const report = a2p.checkMessage({
+  to: "+15550109999",
+  body: "Your code is 123456. Reply STOP to opt out.",
+  campaign: { id: "login_otp" },
+  consent: { granted: true, source: "signup_form" },
+});
+
+if (report.blocked) {
+  // hard problems (invalid recipient, empty body, or anything you marked required)
+}
+report.findings.forEach((f) => console.log(f.severity, f.code, f.message));
+
+// Or fail fast as a pre-send guard (throws SmsComplianceError on a block finding):
+a2p.assertReady(message);
+```
+
+Checks include: missing campaign/10DLC id, missing consent, STOP/HELP opt-out
+language, public link shorteners, missing sender metadata, and body length.
+Use `requireCampaignId` / `requireConsent` to escalate those warnings to blocks.
+
+## Roadmap
+
+See [docs/ROADMAP.md](docs/ROADMAP.md). Highlights: webhook signature
+verification, delivery-status normalization, hosted A2PCheck readiness,
+country/sender capability checks, a provider error-code matrix, a package
+publish workflow, and an inbound opt-out state machine.
+
 ## Error taxonomy
 
 Provider responses are normalized to `SmsSdkError` subclasses with codes such as:

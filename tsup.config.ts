@@ -7,6 +7,7 @@ const libraryEntries = [
   "src/adapters/plivo.ts",
   "src/adapters/sns.ts",
   "src/adapters/memory.ts",
+  "src/plugins/a2pcheck.ts",
 ];
 
 export default defineConfig([
